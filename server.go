@@ -16,11 +16,11 @@ func indexHandler(c *fiber.Ctx, db *sql.DB) error {
 	var res string
 	var todos []string
 	rows, err := db.Query("SELECT * FROM todos;")
-	defer rows.Close()
 	if err != nil {
 		log.Fatalln(err)
 		c.JSON("An error occured")
 	}
+	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&res)
 		todos = append(todos, res)
@@ -77,7 +77,6 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
-	
 	
 	app.Get("/", func(c *fiber.Ctx) error {
 		return indexHandler(c, db)
